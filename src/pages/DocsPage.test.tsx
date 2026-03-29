@@ -1,12 +1,12 @@
-import { screen } from '@testing-library/react'
-import DocsPage from './DocsPage'
-import { renderWithProviders } from '../test/renderWithProviders'
+import { screen } from '@testing-library/react';
+import DocsPage from './DocsPage';
+import { renderWithProviders } from '../test/renderWithProviders';
 
 describe('DocsPage', () => {
   it('lists the starter commands', () => {
-    renderWithProviders(<DocsPage />)
+    renderWithProviders(<DocsPage />);
 
-    expect(screen.getByText('npm run dev')).toBeInTheDocument()
-    expect(screen.getByText('npm run test')).toBeInTheDocument()
-  })
-})
+    expect(screen.getByText('npm run dev')).toBeInTheDocument();
+    expect(screen.getByText('npm run test')).toBeInTheDocument();
+  });
+});

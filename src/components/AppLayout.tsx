@@ -1,13 +1,16 @@
-import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material'
-import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom'
+import { AppBar, Box, Button, Container, Stack, Toolbar, Typography } from '@mui/material';
+import { Link as RouterLink, Outlet, useLocation } from 'react-router-dom';
 
 const navigationItems = [
   { label: 'Home', to: '/' },
+  { label: 'Seasons', to: '/seasons' },
+  { label: 'Teams', to: '/teams' },
+  { label: 'Games', to: '/games' },
   { label: 'Docs', to: '/docs' },
-]
+];
 
 function AppLayout() {
-  const location = useLocation()
+  const location = useLocation();
 
   return (
     <Box sx={{ minHeight: '100vh' }}>
@@ -22,13 +25,19 @@ function AppLayout() {
             component={RouterLink}
             to="/"
             variant="h6"
-            sx={{ color: 'text.primary', textDecoration: 'none', fontWeight: 700, letterSpacing: '-0.02em' }}
+            sx={{
+              color: 'text.primary',
+              textDecoration: 'none',
+              fontWeight: 700,
+              letterSpacing: '-0.02em',
+            }}
           >
             Yepl MVC UI
           </Typography>
           <Stack direction="row" spacing={1} sx={{ ml: 'auto' }}>
             {navigationItems.map((item) => {
-              const selected = item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to)
+              const selected =
+                item.to === '/' ? location.pathname === '/' : location.pathname.startsWith(item.to);
 
               return (
                 <Button
@@ -40,7 +49,7 @@ function AppLayout() {
                 >
                   {item.label}
                 </Button>
-              )
+              );
             })}
           </Stack>
         </Toolbar>
@@ -50,7 +59,7 @@ function AppLayout() {
         <Outlet />
       </Container>
     </Box>
-  )
+  );
 }
 
-export default AppLayout
+export default AppLayout;
