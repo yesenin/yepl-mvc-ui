@@ -8,7 +8,7 @@ function TeamsPage() {
           Teams
         </Typography>
       </Box>
-      <Card sx={{ borderRadius: 4 }}>
+      <Card sx={{ borderRadius: 1 }}>
         <CardContent>
           <Stack spacing={2}>
             <Typography variant="h5">List of teams</Typography>

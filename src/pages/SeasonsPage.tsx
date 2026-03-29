@@ -8,7 +8,7 @@ function SeasonsPage() {
           Seasons
         </Typography>
       </Box>
-      <Card sx={{ borderRadius: 4 }}>
+      <Card sx={{ borderRadius: 1 }}>
         <CardContent></CardContent>
       </Card>
     </Stack>

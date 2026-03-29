@@ -8,7 +8,7 @@ function GamesPage() {
           Games
         </Typography>
       </Box>
-      <Card sx={{ borderRadius: 4 }}>
+      <Card sx={{ borderRadius: 1 }}>
         <CardContent>
           <Stack spacing={2}>
             <Typography variant="h5">List of games</Typography>
