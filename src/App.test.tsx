@@ -8,21 +8,21 @@ describe('App routing', () => {
     jest.restoreAllMocks();
   });
 
-  it('renders the home page on the root route', () => {
+  it('renders the home page on the root route', async () => {
     renderWithProviders(<App />, { route: '/' });
 
     expect(
-      screen.getByRole('heading', {
+      await screen.findByRole('heading', {
         level: 2,
         name: /yepl CMS \(kinda\)/i,
       }),
     ).not.toBeNull();
   });
 
-  it('renders the not found page for unknown routes', () => {
+  it('renders the not found page for unknown routes', async () => {
     renderWithProviders(<App />, { route: '/missing' });
 
-    expect(screen.getByRole('heading', { name: /page not found/i })).not.toBeNull();
+    expect(await screen.findByRole('heading', { name: /page not found/i })).not.toBeNull();
   });
 
   it('renders a team details route', async () => {

@@ -1,6 +1,6 @@
 import { createAsyncThunk, createSelector, createSlice } from '@reduxjs/toolkit';
 import type { RootState } from '../../app/store';
-import { fetchTeam, fetchTeams } from './api';
+import { fetchTeam, fetchTeams, updateTeam } from './api';
 import type { AsyncStatus, Team } from './types';
 
 type TeamsState = {
@@ -10,6 +10,8 @@ type TeamsState = {
   listError: string | null;
   detailStatusById: Record<string, AsyncStatus>;
   detailErrorById: Record<string, string | null>;
+  updateStatusById: Record<string, AsyncStatus>;
+  updateErrorById: Record<string, string | null>;
 };
 
 const initialState: TeamsState = {
@@ -19,10 +21,22 @@ const initialState: TeamsState = {
   listError: null,
   detailStatusById: {},
   detailErrorById: {},
+  updateStatusById: {},
+  updateErrorById: {},
 };
 
 function getErrorMessage(error: unknown) {
   if (error instanceof Error) {
+    return error.message;
+  }
+
+  if (
+    typeof error === 'object' &&
+    error !== null &&
+    'message' in error &&
+    typeof error.message === 'string' &&
+    error.message.length > 0
+  ) {
     return error.message;
   }
 
@@ -50,10 +64,19 @@ export const loadTeamById = createAsyncThunk(
   },
 );
 
+export const updateTeamById = createAsyncThunk('teams/updateTeamById', async (team: Team) =>
+  updateTeam(team),
+);
+
 const teamsSlice = createSlice({
   name: 'teams',
   initialState,
-  reducers: {},
+  reducers: {
+    clearTeamUpdateState: (state, action: { payload: string }) => {
+      state.updateStatusById[action.payload] = 'idle';
+      state.updateErrorById[action.payload] = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(loadTeams.pending, (state) => {
@@ -103,6 +126,30 @@ const teamsSlice = createSlice({
 
         state.detailStatusById[action.meta.arg] = 'failed';
         state.detailErrorById[action.meta.arg] = getErrorMessage(action.error);
+      })
+      .addCase(updateTeamById.pending, (state, action) => {
+        const teamId = action.meta.arg.id;
+
+        state.updateStatusById[teamId] = 'loading';
+        state.updateErrorById[teamId] = null;
+      })
+      .addCase(updateTeamById.fulfilled, (state, action) => {
+        const team = action.payload;
+
+        state.entities[team.id] = team;
+        if (!state.ids.includes(team.id)) {
+          state.ids.push(team.id);
+        }
+        state.detailStatusById[team.id] = 'succeeded';
+        state.detailErrorById[team.id] = null;
+        state.updateStatusById[team.id] = 'succeeded';
+        state.updateErrorById[team.id] = null;
+      })
+      .addCase(updateTeamById.rejected, (state, action) => {
+        const teamId = action.meta.arg.id;
+
+        state.updateStatusById[teamId] = 'failed';
+        state.updateErrorById[teamId] = getErrorMessage(action.error);
       });
   },
 });
@@ -134,5 +181,15 @@ export function selectTeamStatus(state: RootState, teamId: string) {
 export function selectTeamError(state: RootState, teamId: string) {
   return state.teams.detailErrorById[teamId] ?? null;
 }
+
+export function selectTeamUpdateStatus(state: RootState, teamId: string) {
+  return state.teams.updateStatusById[teamId] ?? 'idle';
+}
+
+export function selectTeamUpdateError(state: RootState, teamId: string) {
+  return state.teams.updateErrorById[teamId] ?? null;
+}
+
+export const { clearTeamUpdateState } = teamsSlice.actions;
 
 export default teamsSlice.reducer;

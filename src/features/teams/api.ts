@@ -11,6 +11,24 @@ async function readJson<T>(response: Response): Promise<T> {
   return (await response.json()) as T;
 }
 
+async function readJsonOrFallback<T>(response: Response, fallbackValue: T): Promise<T> {
+  if (!response.ok) {
+    throw new Error(`Request failed with status ${response.status}`);
+  }
+
+  if (response.status === 204) {
+    return fallbackValue;
+  }
+
+  const responseText = await response.text();
+
+  if (!responseText.trim()) {
+    return fallbackValue;
+  }
+
+  return JSON.parse(responseText) as T;
+}
+
 export async function fetchTeams(): Promise<Team[]> {
   const response = await fetch(TEAMS_API_URL);
   return readJson<Team[]>(response);
@@ -19,6 +37,18 @@ export async function fetchTeams(): Promise<Team[]> {
 export async function fetchTeam(teamId: string): Promise<Team> {
   const response = await fetch(`${TEAMS_API_URL}/${teamId}`);
   return readJson<Team>(response);
+}
+
+export async function updateTeam(team: Team): Promise<Team> {
+  const response = await fetch(`${TEAMS_API_URL}/${team.id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(team),
+  });
+
+  return readJsonOrFallback<Team>(response, team);
 }
 
 export async function fetchTeamSeasons(
