@@ -6,7 +6,7 @@ describe('DocsPage', () => {
   it('lists the starter commands', () => {
     renderWithProviders(<DocsPage />);
 
-    expect(screen.getByText('npm run dev')).toBeInTheDocument();
-    expect(screen.getByText('npm run test')).toBeInTheDocument();
+    expect(screen.getByText('npm run dev')).not.toBeNull();
+    expect(screen.getByText('npm run test')).not.toBeNull();
   });
 });

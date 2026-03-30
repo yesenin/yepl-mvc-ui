@@ -1,25 +1,28 @@
-import type { PropsWithChildren, ReactElement } from 'react'
-import { CssBaseline, ThemeProvider } from '@mui/material'
-import { render } from '@testing-library/react'
-import { MemoryRouter } from 'react-router-dom'
-import { appTheme } from '../theme/theme'
+import type { PropsWithChildren, ReactElement } from 'react';
+import { render } from '@testing-library/react';
+import { MemoryRouter } from 'react-router-dom';
+import AppProviders from '../app/AppProviders';
+import { createAppStore, type AppStore } from '../app/store';
 
 type RenderOptions = {
-  route?: string
-}
+  route?: string;
+  store?: AppStore;
+};
 
 export function renderWithProviders(
   ui: ReactElement,
-  { route = '/' }: RenderOptions = {},
+  { route = '/', store = createAppStore() }: RenderOptions = {},
 ) {
   function Wrapper({ children }: PropsWithChildren) {
     return (
-      <ThemeProvider theme={appTheme}>
-        <CssBaseline />
+      <AppProviders store={store}>
         <MemoryRouter initialEntries={[route]}>{children}</MemoryRouter>
-      </ThemeProvider>
-    )
+      </AppProviders>
+    );
   }
 
-  return render(ui, { wrapper: Wrapper })
+  return {
+    store,
+    ...render(ui, { wrapper: Wrapper }),
+  };
 }

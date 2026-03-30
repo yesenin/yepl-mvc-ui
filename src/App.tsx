@@ -4,6 +4,7 @@ import DocsPage from './pages/DocsPage';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
 import SeasonsPage from './pages/SeasonsPage';
+import TeamDetailsPage from './pages/TeamDetailsPage';
 import TeamsPage from './pages/TeamsPage';
 import GamesPage from './pages/GamesPage';
 
@@ -15,6 +16,7 @@ function App() {
         <Route path="docs" element={<DocsPage />} />
         <Route path="seasons" element={<SeasonsPage />} />
         <Route path="teams" element={<TeamsPage />} />
+        <Route path="teams/:teamId" element={<TeamDetailsPage />} />
         <Route path="games" element={<GamesPage />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>

@@ -6,6 +6,6 @@ describe('GamesPage', () => {
   it('renders the games page', () => {
     renderWithProviders(<GamesPage />);
 
-    expect(screen.getByText('Games')).toBeInTheDocument();
+    expect(screen.getByText('Games')).not.toBeNull();
   });
 });
