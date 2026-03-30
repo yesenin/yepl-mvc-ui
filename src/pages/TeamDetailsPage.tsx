@@ -7,16 +7,18 @@ import {
   CircularProgress,
   List,
   ListItem,
+  ListItemButton,
+  ListItemText,
   Pagination,
   Stack,
   Typography,
 } from '@mui/material';
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import {
   loadTeamSeasonsPage,
-  selectTeamSeasons,
+  makeSelectTeamSeasons,
   selectTeamSeasonsCurrentPage,
   selectTeamSeasonsError,
   selectTeamSeasonsStatus,
@@ -33,6 +35,7 @@ import {
 function TeamDetailsPage() {
   const { teamId = '' } = useParams();
   const dispatch = useAppDispatch();
+  const selectTeamSeasons = useMemo(makeSelectTeamSeasons, []);
   const team = useAppSelector((state) => selectTeamById(state, teamId));
   const teamStatus = useAppSelector((state) => selectTeamStatus(state, teamId));
   const teamError = useAppSelector((state) => selectTeamError(state, teamId));
@@ -109,8 +112,10 @@ function TeamDetailsPage() {
             {seasons.length > 0 ? (
               <List disablePadding>
                 {seasons.map((season) => (
-                  <ListItem key={season.id} disablePadding sx={{ py: 1 }}>
-                    <Typography>{season.title}</Typography>
+                  <ListItem key={season.id} disablePadding>
+                    <ListItemButton component={RouterLink} to={`/seasons/${season.id}`}>
+                      <ListItemText primary={season.title} secondary={`Season id: ${season.id}`} />
+                    </ListItemButton>
                   </ListItem>
                 ))}
               </List>

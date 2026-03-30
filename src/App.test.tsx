@@ -57,4 +57,35 @@ describe('App routing', () => {
 
     expect(await screen.findByRole('heading', { level: 3, name: 'Liverpool' })).not.toBeNull();
   });
+
+  it('renders a season details route', async () => {
+    (global.fetch as jest.Mock).mockImplementation((input: RequestInfo | URL) => {
+      const url = String(input);
+
+      if (url.includes('/teams?skip=0&take=22')) {
+        return Promise.resolve({
+          ok: true,
+          json: async () => ({
+            total: 1,
+            skip: 0,
+            take: 22,
+            url: '/api/seasons/season-1992/teams',
+            items: [{ id: 'liverpool', name: 'Liverpool', optaId: null, abbreviation: 'LIV' }],
+          }),
+        } as Response);
+      }
+
+      return Promise.resolve({
+        ok: true,
+        json: async () => ({
+          id: 'season-1992',
+          title: '1992/93',
+        }),
+      } as Response);
+    });
+
+    renderWithProviders(<App />, { route: '/seasons/season-1992' });
+
+    expect(await screen.findByRole('heading', { level: 3, name: '1992/93' })).not.toBeNull();
+  });
 });

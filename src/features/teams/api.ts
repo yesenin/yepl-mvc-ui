@@ -1,6 +1,7 @@
 import type { PaginatedResponse, Season, Team } from './types';
 
 const TEAMS_API_URL = 'http://localhost:5007/api/teams';
+const SEASONS_API_URL = 'http://localhost:5007/api/seasons';
 
 async function readJson<T>(response: Response): Promise<T> {
   if (!response.ok) {
@@ -27,4 +28,23 @@ export async function fetchTeamSeasons(
 ): Promise<PaginatedResponse<Season>> {
   const response = await fetch(`${TEAMS_API_URL}/${teamId}/seasons?skip=${skip}&take=${take}`);
   return readJson<PaginatedResponse<Season>>(response);
+}
+
+export async function fetchSeasons(): Promise<Season[]> {
+  const response = await fetch(SEASONS_API_URL);
+  return readJson<Season[]>(response);
+}
+
+export async function fetchSeason(seasonId: string): Promise<Season> {
+  const response = await fetch(`${SEASONS_API_URL}/${seasonId}`);
+  return readJson<Season>(response);
+}
+
+export async function fetchSeasonTeams(
+  seasonId: string,
+  skip: number,
+  take: number,
+): Promise<PaginatedResponse<Team>> {
+  const response = await fetch(`${SEASONS_API_URL}/${seasonId}/teams?skip=${skip}&take=${take}`);
+  return readJson<PaginatedResponse<Team>>(response);
 }

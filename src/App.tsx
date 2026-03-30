@@ -3,6 +3,7 @@ import AppLayout from './components/AppLayout';
 import DocsPage from './pages/DocsPage';
 import HomePage from './pages/HomePage';
 import NotFoundPage from './pages/NotFoundPage';
+import SeasonDetailsPage from './pages/SeasonDetailsPage';
 import SeasonsPage from './pages/SeasonsPage';
 import TeamDetailsPage from './pages/TeamDetailsPage';
 import TeamsPage from './pages/TeamsPage';
@@ -15,6 +16,7 @@ function App() {
         <Route index element={<HomePage />} />
         <Route path="docs" element={<DocsPage />} />
         <Route path="seasons" element={<SeasonsPage />} />
+        <Route path="seasons/:seasonId" element={<SeasonDetailsPage />} />
         <Route path="teams" element={<TeamsPage />} />
         <Route path="teams/:teamId" element={<TeamDetailsPage />} />
         <Route path="games" element={<GamesPage />} />
